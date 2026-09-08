@@ -42,20 +42,45 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Auto Keep-Alive: If RENDER_EXTERNAL_URL is set, self-ping every 14 minutes
-const renderExternalUrl = process.env.RENDER_EXTERNAL_URL;
-if (renderExternalUrl) {
-  const PING_INTERVAL = 14 * 60 * 1000; // 14 minutes (Render free tier sleeps at 15m)
-  setInterval(async () => {
+/**
+ * Built-in Keep-Alive Self-Pinger for Render Free Tier.
+ * Render Web Services spin down after 15 minutes of inactivity.
+ * This background task automatically pings the public URL every 10 minutes to guarantee 24/7 uptime.
+ */
+function initKeepAlivePinger() {
+  const targetUrl =
+    process.env.RENDER_EXTERNAL_URL ||
+    process.env.SELF_PING_URL ||
+    process.env.SERVER_URL ||
+    process.env.API_URL;
+
+  if (!targetUrl) {
+    console.log('[Keep-Alive] No external URL detected (local development). Self-ping idle.');
+    return;
+  }
+
+  const cleanBase = targetUrl.replace(/\/$/, '');
+  const pingUrl = `${cleanBase}/health`;
+  const PING_INTERVAL_MS = 10 * 60 * 1000; // Ping every 10 minutes (Render sleeps at 15m)
+
+  console.log(`[Keep-Alive] 🚀 Active: Self-pinging ${pingUrl} every 10 minutes to keep Render awake 24/7`);
+
+  const doPing = async () => {
     try {
-      const pingUrl = `${renderExternalUrl.replace(/\/$/, '')}/health`;
-      await fetch(pingUrl);
-      console.log(`[Keep-Alive] Pinged ${pingUrl} at ${new Date().toISOString()}`);
-    } catch (e: any) {
-      console.warn(`[Keep-Alive] Ping warning:`, e.message);
+      const res = await fetch(pingUrl, {
+        headers: { 'User-Agent': 'NutriLog-KeepAlive-SelfPing/1.0' },
+      });
+      console.log(`[Keep-Alive] Pinged ${pingUrl} -> Status: ${res.status} at ${new Date().toISOString()}`);
+    } catch (err: any) {
+      console.warn(`[Keep-Alive] Ping warning:`, err.message);
     }
-  }, PING_INTERVAL);
-  console.log(`[Keep-Alive] Auto self-ping active for: ${renderExternalUrl}`);
+  };
+
+  // Initial ping 30 seconds after server starts
+  setTimeout(doPing, 30 * 1000);
+
+  // Recurring ping every 10 minutes
+  setInterval(doPing, PING_INTERVAL_MS);
 }
 
 // Serve frontend static build in production (if built)
@@ -78,6 +103,7 @@ async function startServer() {
   app.listen(PORT, () => {
     console.log(`[NutriLog Server] Running at http://localhost:${PORT}`);
     console.log(`[NutriLog Server] API Health: http://localhost:${PORT}/api/health`);
+    initKeepAlivePinger();
   });
 }
 
