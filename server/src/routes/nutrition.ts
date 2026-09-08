@@ -1,4 +1,5 @@
 import { Router, Request, Response } from 'express';
+import mongoose from 'mongoose';
 import { parseWithGemini } from '../services/gemini.js';
 import { User } from '../models/User.js';
 
@@ -12,7 +13,7 @@ nutritionRouter.post('/parse', async (req: Request, res: Response) => {
     }
 
     let activeKey = apiKey;
-    if (!activeKey && userId) {
+    if (!activeKey && userId && mongoose.Types.ObjectId.isValid(userId)) {
       const user = await User.findById(userId);
       if (user?.geminiApiKey) {
         activeKey = user.geminiApiKey;

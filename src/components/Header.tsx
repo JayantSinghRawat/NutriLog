@@ -56,20 +56,73 @@ export function Header({
 
   return (
     <header className="header-wrapper">
-      {/* Brand Section */}
-      <div className="brand-section">
-        <div className="brand-icon-wrapper">
-          <Activity size={20} strokeWidth={2.5} />
-        </div>
-        <div>
+      {/* Row 1: Brand on left, compact actions on right */}
+      <div className="header-top-row">
+        <div className="brand-section">
+          <div className="brand-icon-wrapper">
+            <Activity size={18} strokeWidth={2.5} />
+          </div>
           <div className="brand-title">
             DailyLog
             <span className="brand-tag">Tracker</span>
           </div>
         </div>
+
+        <div className="header-actions-group">
+          <button
+            className="icon-action-btn compact-header-btn"
+            onClick={onOpenHistory}
+            title="Past Days History"
+            aria-label="Past Days History"
+          >
+            <History size={16} />
+            <span className="header-btn-text">Past Days</span>
+          </button>
+
+          <button
+            className="icon-action-btn compact-header-btn"
+            onClick={onOpenGoals}
+            title="Macro Targets"
+            aria-label="Macro Targets"
+          >
+            <Target size={16} />
+            <span className="header-btn-text">Goals</span>
+          </button>
+
+          <button
+            className="theme-toggle-btn compact-header-btn"
+            onClick={toggleTheme}
+            title={`Switch to ${theme === 'black' ? 'Light' : 'Dark'} theme`}
+            aria-label="Toggle theme"
+          >
+            {theme === 'black' ? <Sun size={17} /> : <Moon size={17} />}
+          </button>
+
+          {user ? (
+            <button
+              className="icon-action-btn compact-header-btn user-btn"
+              onClick={logout}
+              title={`Logged in as ${user.name}. Tap to log out.`}
+            >
+              <User size={15} />
+              <span className="user-name-text">
+                {user.name}
+              </span>
+              <LogOut size={12} style={{ opacity: 0.6 }} />
+            </button>
+          ) : (
+            <button
+              className="btn-primary"
+              onClick={() => setIsAuthModalOpen(true)}
+              style={{ padding: '0.35rem 0.7rem', fontSize: '0.8rem', minHeight: 34 }}
+            >
+              Sign In
+            </button>
+          )}
+        </div>
       </div>
 
-      {/* Date Navigator */}
+      {/* Row 2: Date Navigator */}
       <div className="date-navigator">
         <button
           className="nav-arrow-btn"
@@ -77,7 +130,7 @@ export function Header({
           title="Previous Day"
           aria-label="Previous Day"
         >
-          <ChevronLeft size={18} />
+          <ChevronLeft size={17} />
         </button>
 
         <div style={{ position: 'relative' }}>
@@ -86,7 +139,7 @@ export function Header({
             onClick={() => dateInputRef.current && (dateInputRef.current as any).showPicker?.()}
             title="Click to select date"
           >
-            <Calendar size={15} />
+            <Calendar size={14} />
             <span>{formatDisplayDate(currentDateKey)}</span>
             {isToday && <span className="today-chip">Today</span>}
           </button>
@@ -113,58 +166,8 @@ export function Header({
           title="Next Day"
           aria-label="Next Day"
         >
-          <ChevronRight size={18} />
+          <ChevronRight size={17} />
         </button>
-      </div>
-
-      {/* Header Action Controls */}
-      <div className="header-actions">
-        <button
-          className="icon-action-btn"
-          onClick={onOpenHistory}
-          title="Past Days History"
-        >
-          <History size={16} />
-          <span>Past Days</span>
-        </button>
-
-        <button
-          className="icon-action-btn"
-          onClick={onOpenGoals}
-          title="Customize Targets"
-        >
-          <Target size={16} />
-          <span>Goals</span>
-        </button>
-
-        <button
-          className="theme-toggle-btn"
-          onClick={toggleTheme}
-          title={`Switch to ${theme === 'black' ? 'Light' : 'Dark'} theme`}
-          aria-label="Toggle theme"
-        >
-          {theme === 'black' ? <Sun size={18} /> : <Moon size={18} />}
-        </button>
-
-        {user ? (
-          <button
-            className="icon-action-btn"
-            onClick={logout}
-            title={`Logged in as ${user.name} (${user.email}). Click to Log Out.`}
-          >
-            <User size={15} />
-            <span>{user.name}</span>
-            <LogOut size={13} style={{ marginLeft: 4, opacity: 0.6 }} />
-          </button>
-        ) : (
-          <button
-            className="btn-primary"
-            onClick={() => setIsAuthModalOpen(true)}
-            style={{ padding: '0.45rem 0.9rem', fontSize: '0.85rem' }}
-          >
-            Sign In
-          </button>
-        )}
       </div>
     </header>
   );

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Trash2, Copy, Utensils } from 'lucide-react';
+import React, { useState } from 'react';
+import { Trash2, Copy, Utensils, LayoutGrid, List } from 'lucide-react';
 import { FoodEntry, NutrientTotals } from '../types/nutrition.js';
 import { calculateNutrientsFromWeight } from '../utils/nutritionParser.js';
 
@@ -18,6 +18,14 @@ export function FoodTable({
   onDeleteEntry,
   onDuplicateEntry,
 }: FoodTableProps) {
+  // Toggle between mobile cards and traditional table view (cards default on mobile)
+  const [viewMode, setViewMode] = useState<'cards' | 'table'>(() => {
+    if (typeof window !== 'undefined' && window.innerWidth <= 768) {
+      return 'cards';
+    }
+    return 'table';
+  });
+
   // Handle direct inline weight change with immediate recalculation
   const handleWeightChange = (entry: FoodEntry, newWeightStr: string) => {
     const newWeight = parseFloat(newWeightStr) || 0;
@@ -69,40 +77,217 @@ export function FoodTable({
             {entries.length} {entries.length === 1 ? 'item' : 'items'}
           </span>
         </div>
-        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-          Click cell to edit • Edit weight to recalculate
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          {/* View toggle button (especially handy on mobile) */}
+          <div className="view-toggle-group">
+            <button
+              type="button"
+              className={`view-toggle-btn ${viewMode === 'cards' ? 'active' : ''}`}
+              onClick={() => setViewMode('cards')}
+              title="Card View (best for mobile)"
+            >
+              <LayoutGrid size={15} />
+              <span className="toggle-label">Cards</span>
+            </button>
+            <button
+              type="button"
+              className={`view-toggle-btn ${viewMode === 'table' ? 'active' : ''}`}
+              onClick={() => setViewMode('table')}
+              title="Spreadsheet Table View"
+            >
+              <List size={15} />
+              <span className="toggle-label">Table</span>
+            </button>
+          </div>
         </div>
       </div>
 
-      <div className="table-scroll-wrapper">
-        <table className="nutrient-table">
-          <thead>
-            <tr>
-              <th style={{ width: '40px' }}>#</th>
-              <th>Food Name</th>
-              <th className="num-col">Weight (g)</th>
-              <th className="num-col">Kcal</th>
-              <th className="num-col">Carbs (g)</th>
-              <th className="num-col">Fat (g)</th>
-              <th className="num-col">Fibre (g)</th>
-              <th className="num-col">Protein (g)</th>
-              <th style={{ width: '80px', textAlign: 'right' }}>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {entries.length === 0 ? (
+      {/* EMPTY STATE */}
+      {entries.length === 0 ? (
+        <div className="table-empty-state">
+          <div className="empty-icon-circle">
+            <Utensils size={20} />
+          </div>
+          <div className="empty-state-title">No foods logged for this day yet</div>
+        </div>
+      ) : viewMode === 'cards' ? (
+        /* MOBILE CARDS VIEW */
+        <div className="mobile-cards-list">
+          {entries.map((entry, idx) => (
+            <div key={entry.id || idx} className="mobile-food-card">
+              <div className="mobile-card-header">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flex: 1 }}>
+                  <span className="mobile-card-index">#{idx + 1}</span>
+                  <input
+                    type="text"
+                    className="mobile-card-name-input"
+                    value={entry.name}
+                    onChange={(e) => handleFieldChange(entry, 'name', e.target.value)}
+                    title="Edit food name"
+                  />
+                  {entry.source === 'gemini' && (
+                    <span className="gemini-badge">Gemini</span>
+                  )}
+                </div>
+
+                <div className="row-actions">
+                  <button
+                    type="button"
+                    className="action-icon-btn"
+                    onClick={() => onDuplicateEntry(entry)}
+                    title="Duplicate item"
+                  >
+                    <Copy size={15} />
+                  </button>
+                  <button
+                    type="button"
+                    className="action-icon-btn delete-btn"
+                    onClick={() => onDeleteEntry(entry.id)}
+                    title="Delete item"
+                  >
+                    <Trash2 size={15} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Weight Editor */}
+              <div className="mobile-card-weight-row">
+                <label className="mobile-field-label">Weight</label>
+                <div className="mobile-weight-input-box">
+                  <input
+                    type="number"
+                    step="any"
+                    min="0"
+                    inputMode="decimal"
+                    className="mobile-weight-input"
+                    value={entry.weight}
+                    onChange={(e) => handleWeightChange(entry, e.target.value)}
+                  />
+                  <span className="mobile-unit-tag">g</span>
+                </div>
+              </div>
+
+              {/* Macro Grid for this item */}
+              <div className="mobile-macros-grid">
+                <div className="mobile-macro-cell">
+                  <span className="mobile-macro-label">Kcal</span>
+                  <input
+                    type="number"
+                    step="any"
+                    min="0"
+                    inputMode="decimal"
+                    className="mobile-macro-input"
+                    value={entry.kcal}
+                    onChange={(e) => handleFieldChange(entry, 'kcal', e.target.value)}
+                  />
+                </div>
+
+                <div className="mobile-macro-cell">
+                  <span className="mobile-macro-label">Carbs</span>
+                  <input
+                    type="number"
+                    step="any"
+                    min="0"
+                    inputMode="decimal"
+                    className="mobile-macro-input"
+                    value={entry.carbs}
+                    onChange={(e) => handleFieldChange(entry, 'carbs', e.target.value)}
+                  />
+                </div>
+
+                <div className="mobile-macro-cell">
+                  <span className="mobile-macro-label">Fat</span>
+                  <input
+                    type="number"
+                    step="any"
+                    min="0"
+                    inputMode="decimal"
+                    className="mobile-macro-input"
+                    value={entry.fat}
+                    onChange={(e) => handleFieldChange(entry, 'fat', e.target.value)}
+                  />
+                </div>
+
+                <div className="mobile-macro-cell">
+                  <span className="mobile-macro-label">Fibre</span>
+                  <input
+                    type="number"
+                    step="any"
+                    min="0"
+                    inputMode="decimal"
+                    className="mobile-macro-input"
+                    value={entry.fibre}
+                    onChange={(e) => handleFieldChange(entry, 'fibre', e.target.value)}
+                  />
+                </div>
+
+                <div className="mobile-macro-cell">
+                  <span className="mobile-macro-label">Protein</span>
+                  <input
+                    type="number"
+                    step="any"
+                    min="0"
+                    inputMode="decimal"
+                    className="mobile-macro-input"
+                    value={entry.protein}
+                    onChange={(e) => handleFieldChange(entry, 'protein', e.target.value)}
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
+
+          {/* Mobile Totals Footer Card */}
+          <div className="mobile-totals-card">
+            <div className="mobile-totals-title">Daily Total</div>
+            <div className="mobile-totals-grid">
+              <div className="mobile-total-item">
+                <span className="mobile-total-label">Weight</span>
+                <span className="mobile-total-value">{Math.round(totals.weight * 10) / 10}g</span>
+              </div>
+              <div className="mobile-total-item">
+                <span className="mobile-total-label">Calories</span>
+                <span className="mobile-total-value">{Math.round(totals.kcal)} kcal</span>
+              </div>
+              <div className="mobile-total-item">
+                <span className="mobile-total-label">Protein</span>
+                <span className="mobile-total-value">{Math.round(totals.protein * 10) / 10}g</span>
+              </div>
+              <div className="mobile-total-item">
+                <span className="mobile-total-label">Carbs</span>
+                <span className="mobile-total-value">{Math.round(totals.carbs * 10) / 10}g</span>
+              </div>
+              <div className="mobile-total-item">
+                <span className="mobile-total-label">Fat</span>
+                <span className="mobile-total-value">{Math.round(totals.fat * 10) / 10}g</span>
+              </div>
+              <div className="mobile-total-item">
+                <span className="mobile-total-label">Fibre</span>
+                <span className="mobile-total-value">{Math.round(totals.fibre * 10) / 10}g</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        /* TRADITIONAL SPREADSHEET TABLE VIEW */
+        <div className="table-scroll-wrapper">
+          <table className="nutrient-table">
+            <thead>
               <tr>
-                <td colSpan={9}>
-                  <div className="table-empty-state">
-                    <div className="empty-icon-circle">
-                      <Utensils size={20} />
-                    </div>
-                    <div className="empty-state-title">No foods logged for this day yet</div>
-                  </div>
-                </td>
+                <th style={{ width: '40px' }}>#</th>
+                <th>Food Name</th>
+                <th className="num-col">Weight (g)</th>
+                <th className="num-col">Kcal</th>
+                <th className="num-col">Carbs (g)</th>
+                <th className="num-col">Fat (g)</th>
+                <th className="num-col">Fibre (g)</th>
+                <th className="num-col">Protein (g)</th>
+                <th style={{ width: '80px', textAlign: 'right' }}>Actions</th>
               </tr>
-            ) : (
-              entries.map((entry, idx) => (
+            </thead>
+            <tbody>
+              {entries.map((entry, idx) => (
                 <tr key={entry.id || idx}>
                   <td style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontFamily: 'var(--font-mono)' }}>
                     {idx + 1}
@@ -117,19 +302,7 @@ export function FoodTable({
                         title="Edit food name"
                       />
                       {entry.source === 'gemini' && (
-                        <span
-                          style={{
-                            fontSize: '0.65rem',
-                            fontWeight: 700,
-                            padding: '1px 5px',
-                            borderRadius: '3px',
-                            border: '1px solid var(--border-medium)',
-                            background: 'var(--surface-input)',
-                            color: 'var(--text-primary)',
-                            flexShrink: 0,
-                          }}
-                          title="Calculated via Google Gemini AI"
-                        >
+                        <span className="gemini-badge" title="Calculated via Google Gemini AI">
                           Gemini
                         </span>
                       )}
@@ -140,6 +313,7 @@ export function FoodTable({
                       type="number"
                       step="any"
                       min="0"
+                      inputMode="decimal"
                       className="editable-input weight-input"
                       value={entry.weight}
                       onChange={(e) => handleWeightChange(entry, e.target.value)}
@@ -151,6 +325,7 @@ export function FoodTable({
                       type="number"
                       step="any"
                       min="0"
+                      inputMode="decimal"
                       className="editable-input num-input"
                       value={entry.kcal}
                       onChange={(e) => handleFieldChange(entry, 'kcal', e.target.value)}
@@ -161,6 +336,7 @@ export function FoodTable({
                       type="number"
                       step="any"
                       min="0"
+                      inputMode="decimal"
                       className="editable-input num-input"
                       value={entry.carbs}
                       onChange={(e) => handleFieldChange(entry, 'carbs', e.target.value)}
@@ -171,6 +347,7 @@ export function FoodTable({
                       type="number"
                       step="any"
                       min="0"
+                      inputMode="decimal"
                       className="editable-input num-input"
                       value={entry.fat}
                       onChange={(e) => handleFieldChange(entry, 'fat', e.target.value)}
@@ -181,6 +358,7 @@ export function FoodTable({
                       type="number"
                       step="any"
                       min="0"
+                      inputMode="decimal"
                       className="editable-input num-input"
                       value={entry.fibre}
                       onChange={(e) => handleFieldChange(entry, 'fibre', e.target.value)}
@@ -191,6 +369,7 @@ export function FoodTable({
                       type="number"
                       step="any"
                       min="0"
+                      inputMode="decimal"
                       className="editable-input num-input"
                       value={entry.protein}
                       onChange={(e) => handleFieldChange(entry, 'protein', e.target.value)}
@@ -199,6 +378,7 @@ export function FoodTable({
                   <td>
                     <div className="row-actions">
                       <button
+                        type="button"
                         className="action-icon-btn"
                         onClick={() => onDuplicateEntry(entry)}
                         title="Duplicate row"
@@ -206,6 +386,7 @@ export function FoodTable({
                         <Copy size={14} />
                       </button>
                       <button
+                        type="button"
                         className="action-icon-btn delete-btn"
                         onClick={() => onDeleteEntry(entry.id)}
                         title="Delete row"
@@ -215,12 +396,10 @@ export function FoodTable({
                     </div>
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
+              ))}
+            </tbody>
 
-          {/* Table Totals Row At End */}
-          {entries.length > 0 && (
+            {/* Table Totals Row At End */}
             <tfoot>
               <tr className="table-totals-row">
                 <td colSpan={2} className="total-label">
@@ -247,9 +426,9 @@ export function FoodTable({
                 <td></td>
               </tr>
             </tfoot>
-          )}
-        </table>
-      </div>
+          </table>
+        </div>
+      )}
     </div>
   );
 }

@@ -49,8 +49,10 @@ export function QuickAddBar({ onAddEntry }: QuickAddBarProps) {
               setQuery(e.target.value);
               if (errorMessage) setErrorMessage(null);
             }}
-            placeholder="Type what you ate and amount (e.g. 10g, 150g, 2 pieces)..."
-            autoFocus
+            placeholder="What did you eat? (e.g. 10g soya, 2 eggs)..."
+            enterKeyHint="go"
+            autoCapitalize="sentences"
+            autoCorrect="on"
           />
         </div>
 
@@ -63,12 +65,13 @@ export function QuickAddBar({ onAddEntry }: QuickAddBarProps) {
           {loading ? (
             <>
               <Loader2 size={16} className="animate-spin" />
-              <span>Asking Gemini...</span>
+              <span>Calculating...</span>
             </>
           ) : (
             <>
-              <Sparkles size={16} />
-              <span>Calculate & Add</span>
+              <Sparkles size={15} />
+              <span className="desktop-btn-text">Calculate & Add</span>
+              <span className="mobile-btn-text">Add</span>
             </>
           )}
         </button>

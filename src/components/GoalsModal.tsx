@@ -89,6 +89,7 @@ export function GoalsModal({ isOpen, onClose }: GoalsModalProps) {
               </label>
               <input
                 type="number"
+                inputMode="numeric"
                 className="form-input"
                 value={formData.kcal}
                 onChange={(e) => setFormData({ ...formData, kcal: Number(e.target.value) })}
@@ -103,6 +104,7 @@ export function GoalsModal({ isOpen, onClose }: GoalsModalProps) {
                 </label>
                 <input
                   type="number"
+                  inputMode="numeric"
                   className="form-input"
                   value={formData.protein}
                   onChange={(e) => setFormData({ ...formData, protein: Number(e.target.value) })}
@@ -116,6 +118,7 @@ export function GoalsModal({ isOpen, onClose }: GoalsModalProps) {
                 </label>
                 <input
                   type="number"
+                  inputMode="numeric"
                   className="form-input"
                   value={formData.carbs}
                   onChange={(e) => setFormData({ ...formData, carbs: Number(e.target.value) })}
@@ -129,6 +132,7 @@ export function GoalsModal({ isOpen, onClose }: GoalsModalProps) {
                 </label>
                 <input
                   type="number"
+                  inputMode="numeric"
                   className="form-input"
                   value={formData.fat}
                   onChange={(e) => setFormData({ ...formData, fat: Number(e.target.value) })}
@@ -142,6 +146,7 @@ export function GoalsModal({ isOpen, onClose }: GoalsModalProps) {
                 </label>
                 <input
                   type="number"
+                  inputMode="numeric"
                   className="form-input"
                   value={formData.fibre}
                   onChange={(e) => setFormData({ ...formData, fibre: Number(e.target.value) })}

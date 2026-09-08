@@ -96,9 +96,6 @@ export function App() {
         onOpenHistory={() => setIsHistoryOpen(true)}
       />
 
-      {/* Today's Nutrient Summary / Progress Cards */}
-      <DailySummary totals={totals} />
-
       {/* Smart Natural Language Quick Add Bar (Gemini AI Powered) */}
       <QuickAddBar onAddEntry={handleAddEntry} />
 
@@ -110,6 +107,9 @@ export function App() {
         onDeleteEntry={handleDeleteEntry}
         onDuplicateEntry={handleDuplicateEntry}
       />
+
+      {/* Today's Nutrient Summary / Progress Goals (below table) */}
+      <DailySummary totals={totals} onOpenGoals={() => setIsGoalsOpen(true)} />
 
       {/* Modals */}
       <GoalsModal isOpen={isGoalsOpen} onClose={() => setIsGoalsOpen(false)} />
