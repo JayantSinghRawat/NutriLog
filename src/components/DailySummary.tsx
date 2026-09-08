@@ -120,7 +120,10 @@ export function DailySummary({ totals, onOpenGoals }: DailySummaryProps) {
           {stats.map((stat) => (
             <div key={stat.key} className="compact-goal-item">
               <div className="compact-goal-top">
-                <span className="compact-goal-label">{stat.shortName}</span>
+                <span className="compact-goal-label">
+                  {stat.shortName}
+                  <span className="compact-metric-sub">({stat.unit === 'kcal' ? 'Kcal' : stat.unit})</span>
+                </span>
                 <span className="compact-goal-pct">{stat.percent}%</span>
               </div>
               <div className="compact-goal-values">

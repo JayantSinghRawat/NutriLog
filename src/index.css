@@ -857,6 +857,51 @@ input {
   background: var(--surface-input);
 }
 
+.th-cell-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 1px;
+}
+
+.th-name {
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.1;
+}
+
+.th-metric {
+  font-size: 0.5rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--text-secondary);
+  line-height: 1;
+  opacity: 0.85;
+}
+
+.cell-metric-tag {
+  display: block;
+  font-size: 0.5rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--text-secondary);
+  line-height: 1;
+  text-align: right;
+  opacity: 0.8;
+  pointer-events: none;
+  margin-top: 1px;
+}
+
+.compact-metric-sub {
+  font-size: 0.52rem;
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+  font-weight: 600;
+  margin-left: 2px;
+}
+
 .fitted-row-actions {
   display: flex;
   align-items: center;
