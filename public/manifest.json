@@ -1,0 +1,16 @@
+{
+  "short_name": "NutriLog",
+  "name": "NutriLog — Nutrient & Macro Tracker",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#090D16",
+  "theme_color": "#090D16",
+  "display": "standalone",
+  "orientation": "portrait"
+}
