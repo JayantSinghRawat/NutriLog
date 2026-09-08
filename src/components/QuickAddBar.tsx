@@ -49,7 +49,7 @@ export function QuickAddBar({ onAddEntry }: QuickAddBarProps) {
               setQuery(e.target.value);
               if (errorMessage) setErrorMessage(null);
             }}
-            placeholder='Type what you ate & amount e.g. "10g soya chunks", "150g chicken breast", "2 eggs"...'
+            placeholder="Type what you ate and amount (e.g. 10g, 150g, 2 pieces)..."
             autoFocus
           />
         </div>

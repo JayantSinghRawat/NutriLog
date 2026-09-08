@@ -121,12 +121,9 @@ export function FoodTable({
                 <td colSpan={9}>
                   <div className="table-empty-state">
                     <div className="empty-icon-circle">
-                      <Utensils size={22} />
+                      <Utensils size={20} />
                     </div>
                     <div className="empty-state-title">No foods logged for this day yet</div>
-                    <div className="empty-state-desc">
-                      Type what you eat (e.g. <code>10h soya chunks dry</code> or <code>100g chicken breast</code>) to automatically calculate nutrition!
-                    </div>
                   </div>
                 </td>
               </tr>
@@ -255,7 +252,7 @@ export function FoodTable({
               <td colSpan={8} style={{ padding: '0.4rem 0.75rem' }}>
                 <input
                   type="text"
-                  placeholder='Quick table add: type "10h soya chunks dry" and press Enter...'
+                  placeholder="Type food and press Enter..."
                   value={inlineInput}
                   disabled={isParsing}
                   onChange={(e) => setInlineInput(e.target.value)}
