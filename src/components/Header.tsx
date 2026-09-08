@@ -70,17 +70,17 @@ export function Header({
 
         <div className="header-actions-group">
           <button
-            className="icon-action-btn compact-header-btn"
+            className="compact-header-btn"
             onClick={onOpenHistory}
             title="Past Days History"
             aria-label="Past Days History"
           >
             <History size={16} />
-            <span className="header-btn-text">Past Days</span>
+            <span className="header-btn-text">History</span>
           </button>
 
           <button
-            className="icon-action-btn compact-header-btn"
+            className="compact-header-btn"
             onClick={onOpenGoals}
             title="Macro Targets"
             aria-label="Macro Targets"
@@ -90,31 +90,32 @@ export function Header({
           </button>
 
           <button
-            className="theme-toggle-btn compact-header-btn"
+            className="compact-header-btn"
             onClick={toggleTheme}
             title={`Switch to ${theme === 'black' ? 'Light' : 'Dark'} theme`}
             aria-label="Toggle theme"
           >
-            {theme === 'black' ? <Sun size={17} /> : <Moon size={17} />}
+            {theme === 'black' ? <Sun size={16} /> : <Moon size={16} />}
           </button>
 
           {user ? (
             <button
-              className="icon-action-btn compact-header-btn user-btn"
+              className="compact-header-btn user-btn"
               onClick={logout}
               title={`Logged in as ${user.name}. Tap to log out.`}
+              aria-label="User profile and logout"
             >
               <User size={15} />
               <span className="user-name-text">
                 {user.name}
               </span>
-              <LogOut size={12} style={{ opacity: 0.6 }} />
+              <LogOut size={12} className="logout-icon" />
             </button>
           ) : (
             <button
               className="btn-primary"
               onClick={() => setIsAuthModalOpen(true)}
-              style={{ padding: '0.35rem 0.7rem', fontSize: '0.8rem', minHeight: 34 }}
+              style={{ padding: '0.35rem 0.7rem', fontSize: '0.8rem', minHeight: 32 }}
             >
               Sign In
             </button>

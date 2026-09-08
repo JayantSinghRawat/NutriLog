@@ -108,7 +108,7 @@ export function DailySummary({ totals, onOpenGoals }: DailySummaryProps) {
         })}
       </div>
 
-      {/* MOBILE VIEW: Ultra-compact, short minimal size bar below table */}
+      {/* MOBILE VIEW: Clean, uncluttered 2-section layout with no overlapping text */}
       <div
         className="mobile-compact-goals"
         onClick={onOpenGoals}
@@ -116,26 +116,40 @@ export function DailySummary({ totals, onOpenGoals }: DailySummaryProps) {
         tabIndex={0}
         title="Tap to edit daily macro targets"
       >
-        <div className="compact-goals-strip">
-          {stats.map((stat) => (
-            <div key={stat.key} className="compact-goal-item">
-              <div className="compact-goal-top">
-                <span className="compact-goal-label">
-                  {stat.shortName}
-                  <span className="compact-metric-sub">({stat.unit === 'kcal' ? 'Kcal' : stat.unit})</span>
-                </span>
-                <span className="compact-goal-pct">{stat.percent}%</span>
-              </div>
-              <div className="compact-goal-values">
-                <span className="compact-curr">{stat.curr}</span>
-                <span className="compact-slash">/</span>
-                <span className="compact-target">{stat.target}</span>
-              </div>
-              <div className="compact-bar-track">
-                <div className="compact-bar-fill" style={{ width: `${stat.percent}%` }} />
+        <div className="mobile-goals-card">
+          {/* Row 1: Calories Hero */}
+          <div className="mobile-cal-row">
+            <div className="mobile-cal-info">
+              <span className="mobile-cal-label">Calories</span>
+              <div className="mobile-cal-numbers">
+                <span className="mobile-cal-curr">{stats[0].curr}</span>
+                <span className="mobile-cal-target">/ {stats[0].target} kcal</span>
+                <span className="mobile-cal-pct">({stats[0].percent}%)</span>
               </div>
             </div>
-          ))}
+            <div className="mobile-bar-track">
+              <div className="mobile-bar-fill" style={{ width: `${stats[0].percent}%` }} />
+            </div>
+          </div>
+
+          {/* Row 2: 4 Core Macros (Protein, Carbs, Fat, Fibre) */}
+          <div className="mobile-macros-grid">
+            {stats.slice(1).map((stat) => (
+              <div key={stat.key} className="mobile-macro-item">
+                <div className="mobile-macro-header">
+                  <span className="mobile-macro-name">{stat.shortName}</span>
+                  <span className="mobile-macro-pct">{stat.percent}%</span>
+                </div>
+                <div className="mobile-macro-vals">
+                  <span className="mobile-macro-curr">{stat.curr}</span>
+                  <span className="mobile-macro-target">/{stat.target}g</span>
+                </div>
+                <div className="mobile-bar-track">
+                  <div className="mobile-bar-fill" style={{ width: `${stat.percent}%` }} />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

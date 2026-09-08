@@ -148,7 +148,6 @@ export function FoodTable({
                       onChange={(e) => handleWeightChange(entry, e.target.value)}
                       title={`Weight: ${entry.weight}g`}
                     />
-                    <span className="cell-metric-tag">g</span>
                   </td>
                   <td className="td-num">
                     <input
@@ -161,7 +160,6 @@ export function FoodTable({
                       onChange={(e) => handleFieldChange(entry, 'kcal', e.target.value)}
                       title={`Calories: ${entry.kcal} Kcal`}
                     />
-                    <span className="cell-metric-tag">Kcal</span>
                   </td>
                   <td className="td-num">
                     <input
@@ -174,7 +172,6 @@ export function FoodTable({
                       onChange={(e) => handleFieldChange(entry, 'protein', e.target.value)}
                       title={`Protein: ${entry.protein}g`}
                     />
-                    <span className="cell-metric-tag">g</span>
                   </td>
                   <td className="td-num">
                     <input
@@ -187,7 +184,6 @@ export function FoodTable({
                       onChange={(e) => handleFieldChange(entry, 'carbs', e.target.value)}
                       title={`Carbs: ${entry.carbs}g`}
                     />
-                    <span className="cell-metric-tag">g</span>
                   </td>
                   <td className="td-num">
                     <input
@@ -200,7 +196,6 @@ export function FoodTable({
                       onChange={(e) => handleFieldChange(entry, 'fat', e.target.value)}
                       title={`Fat: ${entry.fat}g`}
                     />
-                    <span className="cell-metric-tag">g</span>
                   </td>
                   <td className="td-num">
                     <input
@@ -213,7 +208,6 @@ export function FoodTable({
                       onChange={(e) => handleFieldChange(entry, 'fibre', e.target.value)}
                       title={`Fibre: ${entry.fibre}g`}
                     />
-                    <span className="cell-metric-tag">g</span>
                   </td>
                   <td className="td-act">
                     <div className="fitted-row-actions">
@@ -224,7 +218,7 @@ export function FoodTable({
                         title="Delete food item"
                         aria-label="Delete"
                       >
-                        <Trash2 size={13} />
+                        <Trash2 size={14} />
                       </button>
                     </div>
                   </td>
@@ -237,28 +231,22 @@ export function FoodTable({
               <tr className="fitted-totals-row">
                 <td className="td-food total-label">Total</td>
                 <td className="td-num total-val">
-                  <div>{Math.round(totals.weight * 10) / 10}</div>
-                  <span className="cell-metric-tag">g</span>
+                  {Math.round(totals.weight * 10) / 10}
                 </td>
                 <td className="td-num total-val">
-                  <div>{Math.round(totals.kcal)}</div>
-                  <span className="cell-metric-tag">Kcal</span>
+                  {Math.round(totals.kcal)}
                 </td>
                 <td className="td-num total-val">
-                  <div>{Math.round(totals.protein * 10) / 10}</div>
-                  <span className="cell-metric-tag">g</span>
+                  {Math.round(totals.protein * 10) / 10}
                 </td>
                 <td className="td-num total-val">
-                  <div>{Math.round(totals.carbs * 10) / 10}</div>
-                  <span className="cell-metric-tag">g</span>
+                  {Math.round(totals.carbs * 10) / 10}
                 </td>
                 <td className="td-num total-val">
-                  <div>{Math.round(totals.fat * 10) / 10}</div>
-                  <span className="cell-metric-tag">g</span>
+                  {Math.round(totals.fat * 10) / 10}
                 </td>
                 <td className="td-num total-val">
-                  <div>{Math.round(totals.fibre * 10) / 10}</div>
-                  <span className="cell-metric-tag">g</span>
+                  {Math.round(totals.fibre * 10) / 10}
                 </td>
                 <td className="td-act"></td>
               </tr>
