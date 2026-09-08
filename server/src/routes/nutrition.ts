@@ -8,7 +8,7 @@ nutritionRouter.post('/parse', async (req: Request, res: Response) => {
   try {
     const { query, userId, apiKey } = req.body;
     if (!query || !query.trim()) {
-      return res.status(400).json({ success: false, message: 'Query string is required' });
+      return res.status(400).json({ success: false, message: 'Please enter what you ate.' });
     }
 
     let activeKey = apiKey;
@@ -26,6 +26,10 @@ nutritionRouter.post('/parse', async (req: Request, res: Response) => {
       result,
     });
   } catch (error: any) {
-    res.status(500).json({ success: false, message: error.message });
+    console.error('[Nutrition Route] Error:', error.message);
+    res.status(400).json({
+      success: false,
+      message: error.message || 'Failed to calculate nutrition via Gemini API',
+    });
   }
 });

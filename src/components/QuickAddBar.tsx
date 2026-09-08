@@ -1,8 +1,7 @@
-import React, { useState, useMemo } from 'react';
-import { Plus, Search, Loader2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { Plus, Search, Loader2, AlertCircle, Sparkles } from 'lucide-react';
 import { FoodEntry } from '../types/nutrition.js';
 import { parseFoodQueryApi } from '../services/api.js';
-import { parseFoodQuery } from '../utils/nutritionParser.js';
 import { useAuth } from '../context/AuthContext.js';
 
 interface QuickAddBarProps {
@@ -12,23 +11,19 @@ interface QuickAddBarProps {
 const QUICK_CHIPS = [
   '10h soya chunks dry',
   '100g chicken breast',
-  '2 eggs',
-  '1 scoop whey',
+  '2 boiled eggs',
+  '1 scoop whey protein',
   '2 rotis',
   '100g paneer',
-  '150g rice',
-  '1 banana',
+  '150g white rice',
+  '1 medium banana',
 ];
 
 export function QuickAddBar({ onAddEntry }: QuickAddBarProps) {
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { user } = useAuth();
-
-  const livePreview = useMemo(() => {
-    if (!query.trim() || query.trim().length < 2) return null;
-    return parseFoodQuery(query);
-  }, [query]);
 
   const handleSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
@@ -36,14 +31,17 @@ export function QuickAddBar({ onAddEntry }: QuickAddBarProps) {
     if (!clean || loading) return;
 
     setLoading(true);
+    setErrorMessage(null);
     try {
+      // Direct call to Gemini AI backend
       const result = await parseFoodQueryApi(clean, user?.id, user?.geminiApiKey);
       if (result) {
         onAddEntry(result);
         setQuery('');
       }
-    } catch (err) {
-      console.error('Failed to add food entry:', err);
+    } catch (err: any) {
+      console.error('Failed to parse with Gemini API:', err);
+      setErrorMessage(err.message || 'Error communicating with Gemini API.');
     } finally {
       setLoading(false);
     }
@@ -52,13 +50,15 @@ export function QuickAddBar({ onAddEntry }: QuickAddBarProps) {
   const handleChipClick = async (chipText: string) => {
     if (loading) return;
     setLoading(true);
+    setErrorMessage(null);
     try {
       const result = await parseFoodQueryApi(chipText, user?.id, user?.geminiApiKey);
       if (result) {
         onAddEntry(result);
       }
-    } catch (err) {
-      console.error('Failed to add chip entry:', err);
+    } catch (err: any) {
+      console.error('Failed to parse with Gemini API:', err);
+      setErrorMessage(err.message || 'Error communicating with Gemini API.');
     } finally {
       setLoading(false);
     }
@@ -73,8 +73,11 @@ export function QuickAddBar({ onAddEntry }: QuickAddBarProps) {
             type="text"
             className="quick-add-input"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder='Type food & quantity e.g. "10h soya chunks dry", "100g chicken breast", "2 eggs"...'
+            onChange={(e) => {
+              setQuery(e.target.value);
+              if (errorMessage) setErrorMessage(null);
+            }}
+            placeholder='Type what you ate & amount e.g. "10g soya chunks", "150g chicken breast", "2 eggs"...'
             autoFocus
           />
         </div>
@@ -83,44 +86,46 @@ export function QuickAddBar({ onAddEntry }: QuickAddBarProps) {
           type="submit"
           className="submit-food-btn"
           disabled={!query.trim() || loading}
-          title="Add to daily table"
+          title="Send to Gemini AI to calculate nutrition"
         >
           {loading ? (
             <>
               <Loader2 size={16} className="animate-spin" />
-              <span>Analyzing...</span>
+              <span>Asking Gemini...</span>
             </>
           ) : (
             <>
-              <Plus size={16} strokeWidth={2.5} />
-              <span>Add to Table</span>
+              <Sparkles size={16} />
+              <span>Calculate & Add</span>
             </>
           )}
         </button>
       </form>
 
-      {/* Live Preview (Monochrome) */}
-      {livePreview && (
-        <div className="live-preview-box">
-          <div className="preview-pill-group">
-            <span className="preview-food-name">{livePreview.name}</span>
-            <span style={{ color: 'var(--text-muted)' }}>({livePreview.weight}g)</span>
-          </div>
-
-          <div className="preview-pill-group">
-            <span className="preview-badge">{livePreview.kcal} kcal</span>
-            <span className="preview-badge">P: {livePreview.protein}g</span>
-            <span className="preview-badge">C: {livePreview.carbs}g</span>
-            <span className="preview-badge">F: {livePreview.fat}g</span>
-            <span className="preview-badge">Fib: {livePreview.fibre}g</span>
-          </div>
+      {/* Error / Alert notice */}
+      {errorMessage && (
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.6rem',
+            padding: '0.65rem 0.9rem',
+            borderRadius: 'var(--radius-md)',
+            border: '1px solid var(--border-medium)',
+            background: 'var(--surface-input)',
+            fontSize: '0.85rem',
+            color: 'var(--text-primary)',
+          }}
+        >
+          <AlertCircle size={16} style={{ flexShrink: 0 }} />
+          <span>{errorMessage}</span>
         </div>
       )}
 
-      {/* Quick Suggestion Chips (Monochrome) */}
+      {/* Quick Suggestion Chips */}
       <div className="chips-scroll-container">
         <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginRight: 4 }}>
-          Quick Add:
+          Try entering:
         </span>
         {QUICK_CHIPS.map((chip) => (
           <button
@@ -130,7 +135,7 @@ export function QuickAddBar({ onAddEntry }: QuickAddBarProps) {
             onClick={() => handleChipClick(chip)}
             disabled={loading}
           >
-            + {chip}
+            {chip}
           </button>
         ))}
       </div>

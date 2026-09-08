@@ -154,42 +154,29 @@ export async function parseFoodQueryApi(
   query: string,
   userId?: string,
   geminiApiKey?: string
-): Promise<FoodEntry | null> {
-  try {
-    const res = await fetch(`${API_BASE}/nutrition/parse`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query, userId, apiKey: geminiApiKey }),
-    });
-    const data = await res.json();
-    if (data.success && data.result) {
-      return {
-        id: 'entry_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
-        name: data.result.name,
-        weight: data.result.weight,
-        kcal: data.result.kcal,
-        carbs: data.result.carbs,
-        fat: data.result.fat,
-        fibre: data.result.fibre,
-        protein: data.result.protein,
-        per100g: data.result.per100g,
-        rawQuery: data.result.rawQuery,
-      };
-    }
-  } catch (e) {
-    console.warn('[API] Parse request failed, falling back to local engine:', e);
+): Promise<FoodEntry> {
+  const res = await fetch(`${API_BASE}/nutrition/parse`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ query, userId, apiKey: geminiApiKey }),
+  });
+  
+  const data = await res.json();
+  if (!res.ok || !data.success || !data.result) {
+    throw new Error(data.message || 'Failed to parse nutrition with Gemini API');
   }
 
-  // Dynamic import of local fallback parser if needed
-  try {
-    const { parseFoodQuery } = await import('../utils/nutritionParser.js');
-    const local = parseFoodQuery(query);
-    if (local) {
-      return local;
-    }
-  } catch (e) {
-    console.error('Local fallback parser error:', e);
-  }
-
-  return null;
+  return {
+    id: 'entry_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+    name: data.result.name,
+    weight: data.result.weight,
+    kcal: data.result.kcal,
+    carbs: data.result.carbs,
+    fat: data.result.fat,
+    fibre: data.result.fibre,
+    protein: data.result.protein,
+    per100g: data.result.per100g,
+    rawQuery: data.result.rawQuery,
+    source: 'gemini',
+  };
 }

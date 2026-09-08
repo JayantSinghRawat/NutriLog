@@ -137,13 +137,32 @@ export function FoodTable({
                     {idx + 1}
                   </td>
                   <td>
-                    <input
-                      type="text"
-                      className="editable-input name-input"
-                      value={entry.name}
-                      onChange={(e) => handleFieldChange(entry, 'name', e.target.value)}
-                      title="Edit food name"
-                    />
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                      <input
+                        type="text"
+                        className="editable-input name-input"
+                        value={entry.name}
+                        onChange={(e) => handleFieldChange(entry, 'name', e.target.value)}
+                        title="Edit food name"
+                      />
+                      {entry.source === 'gemini' && (
+                        <span
+                          style={{
+                            fontSize: '0.65rem',
+                            fontWeight: 700,
+                            padding: '1px 5px',
+                            borderRadius: '3px',
+                            border: '1px solid var(--border-medium)',
+                            background: 'var(--surface-input)',
+                            color: 'var(--text-primary)',
+                            flexShrink: 0,
+                          }}
+                          title="Calculated via Google Gemini AI"
+                        >
+                          Gemini
+                        </span>
+                      )}
+                    </div>
                   </td>
                   <td className="num-col">
                     <input

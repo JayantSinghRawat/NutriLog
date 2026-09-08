@@ -5,11 +5,12 @@ import { connectDB } from './config/db.js';
 import { authRouter } from './routes/auth.js';
 import { logsRouter } from './routes/logs.js';
 import { nutritionRouter } from './routes/nutrition.js';
+import { getActiveGeminiKey } from './services/gemini.js';
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 5050;
 
 // Middlewares
 app.use(cors());
@@ -20,13 +21,15 @@ app.use('/api/auth', authRouter);
 app.use('/api/logs', logsRouter);
 app.use('/api/nutrition', nutritionRouter);
 
-// Health check endpoint
+// Health check endpoint with live key detection
 app.get('/api/health', (req, res) => {
+  const activeKey = getActiveGeminiKey();
   res.json({
     status: 'ok',
     timestamp: new Date().toISOString(),
     service: 'DailyLog API',
-    hasGeminiKey: Boolean(process.env.GEMINI_API_KEY),
+    hasGeminiKey: Boolean(activeKey),
+    keyMasked: activeKey ? `${activeKey.slice(0, 6)}...${activeKey.slice(-4)}` : null,
   });
 });
 

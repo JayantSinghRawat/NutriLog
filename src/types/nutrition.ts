@@ -16,6 +16,7 @@ export interface FoodEntry {
   };
   rawQuery?: string;
   isCustom?: boolean;
+  source?: 'gemini' | 'fallback';
 }
 
 export interface NutrientTotals {
