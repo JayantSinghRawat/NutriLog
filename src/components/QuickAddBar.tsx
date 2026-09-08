@@ -49,7 +49,7 @@ export function QuickAddBar({ onAddEntry }: QuickAddBarProps) {
               setQuery(e.target.value);
               if (errorMessage) setErrorMessage(null);
             }}
-            placeholder="What did you eat? (e.g. 10g soya, 2 eggs)..."
+            placeholder="What did you eat?"
             enterKeyHint="go"
             autoCapitalize="sentences"
             autoCorrect="on"
