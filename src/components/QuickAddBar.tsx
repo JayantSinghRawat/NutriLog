@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Search, Loader2, AlertCircle, Sparkles } from 'lucide-react';
+import { Search, Loader2, AlertCircle, Sparkles } from 'lucide-react';
 import { FoodEntry } from '../types/nutrition.js';
 import { parseFoodQueryApi } from '../services/api.js';
 import { useAuth } from '../context/AuthContext.js';
@@ -7,17 +7,6 @@ import { useAuth } from '../context/AuthContext.js';
 interface QuickAddBarProps {
   onAddEntry: (entry: FoodEntry) => void;
 }
-
-const QUICK_CHIPS = [
-  '10h soya chunks dry',
-  '100g chicken breast',
-  '2 boiled eggs',
-  '1 scoop whey protein',
-  '2 rotis',
-  '100g paneer',
-  '150g white rice',
-  '1 medium banana',
-];
 
 export function QuickAddBar({ onAddEntry }: QuickAddBarProps) {
   const [query, setQuery] = useState('');
@@ -38,23 +27,6 @@ export function QuickAddBar({ onAddEntry }: QuickAddBarProps) {
       if (result) {
         onAddEntry(result);
         setQuery('');
-      }
-    } catch (err: any) {
-      console.error('Failed to parse with Gemini API:', err);
-      setErrorMessage(err.message || 'Error communicating with Gemini API.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleChipClick = async (chipText: string) => {
-    if (loading) return;
-    setLoading(true);
-    setErrorMessage(null);
-    try {
-      const result = await parseFoodQueryApi(chipText, user?.id, user?.geminiApiKey);
-      if (result) {
-        onAddEntry(result);
       }
     } catch (err: any) {
       console.error('Failed to parse with Gemini API:', err);
@@ -121,24 +93,6 @@ export function QuickAddBar({ onAddEntry }: QuickAddBarProps) {
           <span>{errorMessage}</span>
         </div>
       )}
-
-      {/* Quick Suggestion Chips */}
-      <div className="chips-scroll-container">
-        <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginRight: 4 }}>
-          Try entering:
-        </span>
-        {QUICK_CHIPS.map((chip) => (
-          <button
-            key={chip}
-            type="button"
-            className="suggestion-chip"
-            onClick={() => handleChipClick(chip)}
-            disabled={loading}
-          >
-            {chip}
-          </button>
-        ))}
-      </div>
     </div>
   );
 }
