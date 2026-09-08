@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
-import { Trash2, Copy, Plus, Utensils, Loader2 } from 'lucide-react';
+import React from 'react';
+import { Trash2, Copy, Utensils } from 'lucide-react';
 import { FoodEntry, NutrientTotals } from '../types/nutrition.js';
 import { calculateNutrientsFromWeight } from '../utils/nutritionParser.js';
-import { parseFoodQueryApi } from '../services/api.js';
-import { useAuth } from '../context/AuthContext.js';
 
 interface FoodTableProps {
   entries: FoodEntry[];
@@ -11,7 +9,6 @@ interface FoodTableProps {
   onUpdateEntry: (updated: FoodEntry) => void;
   onDeleteEntry: (id: string) => void;
   onDuplicateEntry: (entry: FoodEntry) => void;
-  onAddEntry: (entry: FoodEntry) => void;
 }
 
 export function FoodTable({
@@ -20,12 +17,7 @@ export function FoodTable({
   onUpdateEntry,
   onDeleteEntry,
   onDuplicateEntry,
-  onAddEntry,
 }: FoodTableProps) {
-  const [inlineInput, setInlineInput] = useState('');
-  const [isParsing, setIsParsing] = useState(false);
-  const { user } = useAuth();
-
   // Handle direct inline weight change with immediate recalculation
   const handleWeightChange = (entry: FoodEntry, newWeightStr: string) => {
     const newWeight = parseFloat(newWeightStr) || 0;
@@ -64,24 +56,6 @@ export function FoodTable({
     } else {
       const num = parseFloat(val) || 0;
       onUpdateEntry({ ...entry, [field]: num });
-    }
-  };
-
-  const handleInlineAdd = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && inlineInput.trim() && !isParsing) {
-      e.preventDefault();
-      setIsParsing(true);
-      try {
-        const parsed = await parseFoodQueryApi(inlineInput.trim(), user?.id, user?.geminiApiKey);
-        if (parsed) {
-          onAddEntry(parsed);
-          setInlineInput('');
-        }
-      } catch (err) {
-        console.error('Error adding inline item:', err);
-      } finally {
-        setIsParsing(false);
-      }
     }
   };
 
@@ -232,7 +206,7 @@ export function FoodTable({
                         <Copy size={14} />
                       </button>
                       <button
-                        className="action-icon-btn"
+                        className="action-icon-btn delete-btn"
                         onClick={() => onDeleteEntry(entry.id)}
                         title="Delete row"
                       >
@@ -243,32 +217,6 @@ export function FoodTable({
                 </tr>
               ))
             )}
-
-            {/* In-table Quick Entry Row */}
-            <tr style={{ background: 'var(--surface-input)' }}>
-              <td style={{ textAlign: 'center' }}>
-                {isParsing ? <Loader2 size={16} className="animate-spin" /> : <Plus size={16} />}
-              </td>
-              <td colSpan={8} style={{ padding: '0.4rem 0.75rem' }}>
-                <input
-                  type="text"
-                  placeholder="Type food and press Enter..."
-                  value={inlineInput}
-                  disabled={isParsing}
-                  onChange={(e) => setInlineInput(e.target.value)}
-                  onKeyDown={handleInlineAdd}
-                  style={{
-                    width: '100%',
-                    padding: '0.5rem 0.75rem',
-                    background: 'transparent',
-                    border: 'none',
-                    color: 'var(--text-primary)',
-                    fontSize: '0.88rem',
-                    fontWeight: 500,
-                  }}
-                />
-              </td>
-            </tr>
           </tbody>
 
           {/* Table Totals Row At End */}

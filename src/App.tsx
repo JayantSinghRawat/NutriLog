@@ -109,7 +109,6 @@ export function App() {
         onUpdateEntry={handleUpdateEntry}
         onDeleteEntry={handleDeleteEntry}
         onDuplicateEntry={handleDuplicateEntry}
-        onAddEntry={handleAddEntry}
       />
 
       {/* Modals */}
