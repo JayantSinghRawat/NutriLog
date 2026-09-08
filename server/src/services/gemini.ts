@@ -108,21 +108,48 @@ Return ONLY a raw JSON array (without markdown code blocks, backticks, or extra 
   }
 ]`;
 
-  try {
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: prompt,
-      config: {
-        responseMimeType: 'application/json',
-      },
-    });
+  const CANDIDATE_MODELS = [
+    'gemini-3.5-flash-lite',
+    'gemini-3.5-flash',
+    'gemini-flash-lite-latest',
+    'gemini-3.6-flash',
+    'gemini-2.5-flash',
+  ];
 
-    const text = response.text?.trim();
-    if (!text) {
-      throw new Error('Gemini returned an empty response.');
+  let responseText: string | null = null;
+  let lastError: any = null;
+
+  for (const modelName of CANDIDATE_MODELS) {
+    try {
+      const response = await ai.models.generateContent({
+        model: modelName,
+        contents: prompt,
+        config: {
+          responseMimeType: 'application/json',
+        },
+      });
+
+      const text = response.text?.trim();
+      if (text) {
+        responseText = text;
+        console.log(`[Gemini AI] Model ${modelName} succeeded.`);
+        break;
+      }
+    } catch (err: any) {
+      lastError = err;
+      console.warn(`[Gemini AI] Model ${modelName} unavailable (${err.message?.slice(0, 100)}...). Falling back to next model...`);
     }
+  }
 
-    const cleanedText = text.replace(/^```json\s*/i, '').replace(/\s*```$/i, '').trim();
+  if (!responseText) {
+    throw new Error(
+      lastError?.message ||
+        'All available Gemini models reached temporary quota limits. Please retry in a few moments.'
+    );
+  }
+
+  try {
+    const cleanedText = responseText.replace(/^```json\s*/i, '').replace(/\s*```$/i, '').trim();
     const data = JSON.parse(cleanedText);
 
     console.log(`[Gemini AI] Received response:`, data);
@@ -185,7 +212,7 @@ Return ONLY a raw JSON array (without markdown code blocks, backticks, or extra 
 
     return parsedItems;
   } catch (err: any) {
-    console.error('[Gemini AI] Error calling Gemini:', err?.message || err);
+    console.error('[Gemini AI] Error parsing response:', err?.message || err);
     throw new Error(err?.message || 'Failed to calculate nutrients with Gemini API.');
   }
 }
