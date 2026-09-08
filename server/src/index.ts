@@ -28,7 +28,9 @@ app.use('/api/auth', authRouter);
 app.use('/api/logs', logsRouter);
 app.use('/api/nutrition', nutritionRouter);
 
-// Health check endpoint with live key detection
+// Health check endpoints (lightweight for cron pingers)
+app.get('/health', (req, res) => res.status(200).send('OK'));
+
 app.get('/api/health', (req, res) => {
   const activeKey = getActiveGeminiKey();
   res.json({
@@ -39,6 +41,22 @@ app.get('/api/health', (req, res) => {
     keyMasked: activeKey ? `${activeKey.slice(0, 6)}...${activeKey.slice(-4)}` : null,
   });
 });
+
+// Auto Keep-Alive: If RENDER_EXTERNAL_URL is set, self-ping every 14 minutes
+const renderExternalUrl = process.env.RENDER_EXTERNAL_URL;
+if (renderExternalUrl) {
+  const PING_INTERVAL = 14 * 60 * 1000; // 14 minutes (Render free tier sleeps at 15m)
+  setInterval(async () => {
+    try {
+      const pingUrl = `${renderExternalUrl.replace(/\/$/, '')}/health`;
+      await fetch(pingUrl);
+      console.log(`[Keep-Alive] Pinged ${pingUrl} at ${new Date().toISOString()}`);
+    } catch (e: any) {
+      console.warn(`[Keep-Alive] Ping warning:`, e.message);
+    }
+  }, PING_INTERVAL);
+  console.log(`[Keep-Alive] Auto self-ping active for: ${renderExternalUrl}`);
+}
 
 // Serve frontend static build in production (if built)
 if (fs.existsSync(distPath)) {

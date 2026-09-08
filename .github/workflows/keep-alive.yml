@@ -1,0 +1,31 @@
+name: Keep Render Backend Awake
+
+on:
+  schedule:
+    # Run every 14 minutes (Render free tier spins down after 15 minutes of inactivity)
+    - cron: '*/14 * * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab anytime
+
+jobs:
+  ping-render:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Render Health Check
+        run: |
+          TARGET_URL="${{ secrets.RENDER_API_URL }}"
+          if [ -z "$TARGET_URL" ]; then
+            echo "::notice ::RENDER_API_URL secret not configured yet in GitHub Secrets."
+            exit 0
+          fi
+          
+          # Clean URL trailing slash
+          CLEAN_URL="${TARGET_URL%/}"
+          echo "Pinging Render Web Service: $CLEAN_URL/health"
+          
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" -m 25 "$CLEAN_URL/health" || echo "000")
+          if [ "$STATUS" = "200" ]; then
+            echo "Render backend is awake (HTTP 200 OK)."
+          else
+            echo "Falling back to /api/health..."
+            curl -s -f -m 35 "$CLEAN_URL/api/health" || echo "Server waking up from cold start."
+          fi
