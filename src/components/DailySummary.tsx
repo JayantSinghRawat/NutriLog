@@ -27,7 +27,7 @@ export function DailySummary({ totals, onOpenGoals }: DailySummaryProps) {
     {
       key: 'kcal',
       name: 'Calories',
-      shortName: 'Kcal',
+      shortName: 'Calories',
       curr: Math.round(totals.kcal),
       target: goals.kcal,
       unit: 'kcal',
@@ -37,7 +37,7 @@ export function DailySummary({ totals, onOpenGoals }: DailySummaryProps) {
     {
       key: 'protein',
       name: 'Protein',
-      shortName: 'Pro',
+      shortName: 'Protein',
       curr: Math.round(totals.protein * 10) / 10,
       target: goals.protein,
       unit: 'g',
@@ -47,7 +47,7 @@ export function DailySummary({ totals, onOpenGoals }: DailySummaryProps) {
     {
       key: 'carbs',
       name: 'Carbs',
-      shortName: 'Carb',
+      shortName: 'Carbs',
       curr: Math.round(totals.carbs * 10) / 10,
       target: goals.carbs,
       unit: 'g',
@@ -67,7 +67,7 @@ export function DailySummary({ totals, onOpenGoals }: DailySummaryProps) {
     {
       key: 'fibre',
       name: 'Fibre',
-      shortName: 'Fib',
+      shortName: 'Fibre',
       curr: Math.round(totals.fibre * 10) / 10,
       target: goals.fibre,
       unit: 'g',

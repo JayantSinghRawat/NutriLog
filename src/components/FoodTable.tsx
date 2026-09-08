@@ -86,12 +86,12 @@ export function FoodTable({
             <thead>
               <tr>
                 <th className="th-food">Food</th>
-                <th className="th-num">Wt(g)</th>
-                <th className="th-num">Kcal</th>
-                <th className="th-num">Carb</th>
+                <th className="th-num">Weight</th>
+                <th className="th-num">Calories</th>
+                <th className="th-num">Protein</th>
+                <th className="th-num">Carbs</th>
                 <th className="th-num">Fat</th>
-                <th className="th-num">Fib</th>
-                <th className="th-num">Prot</th>
+                <th className="th-num">Fibre</th>
                 <th className="th-act"></th>
               </tr>
             </thead>
@@ -99,9 +99,9 @@ export function FoodTable({
               {entries.map((entry, idx) => (
                 <tr key={entry.id || idx}>
                   <td className="td-food">
-                    <input
-                      type="text"
-                      className="fitted-name-input"
+                    <textarea
+                      rows={Math.max(1, Math.min(3, Math.ceil((entry.name || '').length / 11)))}
+                      className="fitted-name-textarea"
                       value={entry.name}
                       onChange={(e) => handleFieldChange(entry, 'name', e.target.value)}
                       title={entry.name}
@@ -137,6 +137,17 @@ export function FoodTable({
                       min="0"
                       inputMode="decimal"
                       className="fitted-num-input"
+                      value={entry.protein}
+                      onChange={(e) => handleFieldChange(entry, 'protein', e.target.value)}
+                    />
+                  </td>
+                  <td className="td-num">
+                    <input
+                      type="number"
+                      step="any"
+                      min="0"
+                      inputMode="decimal"
+                      className="fitted-num-input"
                       value={entry.carbs}
                       onChange={(e) => handleFieldChange(entry, 'carbs', e.target.value)}
                     />
@@ -163,17 +174,6 @@ export function FoodTable({
                       onChange={(e) => handleFieldChange(entry, 'fibre', e.target.value)}
                     />
                   </td>
-                  <td className="td-num">
-                    <input
-                      type="number"
-                      step="any"
-                      min="0"
-                      inputMode="decimal"
-                      className="fitted-num-input"
-                      value={entry.protein}
-                      onChange={(e) => handleFieldChange(entry, 'protein', e.target.value)}
-                    />
-                  </td>
                   <td className="td-act">
                     <div className="fitted-row-actions">
                       <button
@@ -197,10 +197,10 @@ export function FoodTable({
                 <td className="td-food total-label">Total</td>
                 <td className="td-num total-val">{Math.round(totals.weight * 10) / 10}</td>
                 <td className="td-num total-val">{Math.round(totals.kcal)}</td>
+                <td className="td-num total-val">{Math.round(totals.protein * 10) / 10}</td>
                 <td className="td-num total-val">{Math.round(totals.carbs * 10) / 10}</td>
                 <td className="td-num total-val">{Math.round(totals.fat * 10) / 10}</td>
                 <td className="td-num total-val">{Math.round(totals.fibre * 10) / 10}</td>
-                <td className="td-num total-val">{Math.round(totals.protein * 10) / 10}</td>
                 <td className="td-act"></td>
               </tr>
             </tfoot>

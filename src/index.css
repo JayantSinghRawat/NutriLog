@@ -428,9 +428,9 @@ input {
 }
 
 .compact-goal-label {
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   font-weight: 800;
-  text-transform: uppercase;
+  text-transform: capitalize;
   color: var(--text-secondary);
 }
 
@@ -759,37 +759,41 @@ input {
 
 /* Fixed column width percentages so all 8 columns fit on any screen */
 .th-food, .td-food {
-  width: 25%;
-  padding: 0.4rem 0.2rem 0.4rem 0.45rem;
+  width: 29%;
+  padding: 0.35rem 0.15rem 0.35rem 0.35rem;
 }
 
 .th-num, .td-num {
-  padding: 0.4rem 0.08rem;
+  padding: 0.35rem 0.05rem;
   text-align: right;
 }
 
-.th-num:nth-child(2), .td-num:nth-child(2) { width: 11%; } /* Wt */
-.th-num:nth-child(3), .td-num:nth-child(3) { width: 12%; } /* Kcal */
-.th-num:nth-child(4), .td-num:nth-child(4) { width: 12%; } /* Carb */
-.th-num:nth-child(5), .td-num:nth-child(5) { width: 11%; } /* Fat */
-.th-num:nth-child(6), .td-num:nth-child(6) { width: 11%; } /* Fib */
-.th-num:nth-child(7), .td-num:nth-child(7) { width: 12%; } /* Prot */
+.th-num:nth-child(2), .td-num:nth-child(2) { width: 11%; } /* Weight */
+.th-num:nth-child(3), .td-num:nth-child(3) { width: 12%; } /* Calories */
+.th-num:nth-child(4), .td-num:nth-child(4) { width: 12%; } /* Protein */
+.th-num:nth-child(5), .td-num:nth-child(5) { width: 12%; } /* Carbs */
+.th-num:nth-child(6), .td-num:nth-child(6) { width: 9%; }  /* Fat */
+.th-num:nth-child(7), .td-num:nth-child(7) { width: 10%; } /* Fibre */
 
 .th-act, .td-act {
-  width: 6%;
-  padding: 0.4rem 0.15rem 0.4rem 0;
+  width: 5%;
+  padding: 0.35rem 0.1rem 0.35rem 0;
   text-align: center;
 }
 
 .fitted-nutrient-table th {
-  font-size: 0.68rem;
+  font-size: 0.62rem;
   font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
+  text-transform: capitalize;
+  letter-spacing: 0.01em;
   color: var(--text-muted);
   background: var(--surface-input);
   border-bottom: 1px solid var(--border-subtle);
   white-space: nowrap;
+}
+
+.th-food {
+  text-align: left;
 }
 
 .fitted-nutrient-table tbody tr {
@@ -802,25 +806,29 @@ input {
   background-color: var(--table-row-hover);
 }
 
-.fitted-name-input {
+.fitted-name-textarea {
   width: 100%;
   background: transparent;
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
-  font-size: 0.8rem;
+  font-family: var(--font-sans);
+  font-size: 0.76rem;
   font-weight: 600;
   color: var(--text-primary);
-  padding: 2px 2px;
+  line-height: 1.22;
+  resize: none;
+  padding: 1px 1px;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  word-break: break-word;
+  white-space: pre-wrap;
+  display: block;
   transition: all var(--transition-fast);
 }
 
-.fitted-name-input:focus {
+.fitted-name-textarea:focus {
   border-color: var(--border-focus);
   background: var(--surface-input);
-  white-space: normal;
+  outline: none;
 }
 
 .fitted-num-input {
@@ -829,7 +837,7 @@ input {
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
   font-family: var(--font-mono);
-  font-size: 0.76rem;
+  font-size: 0.75rem;
   font-weight: 700;
   color: var(--text-primary);
   text-align: right;
