@@ -6,6 +6,7 @@ import { FoodTable } from './components/FoodTable.js';
 import { GoalsModal } from './components/GoalsModal.js';
 import { PastDaysModal } from './components/PastDaysModal.js';
 import { AuthModal } from './components/AuthModal.js';
+import { LoginPage } from './components/LoginPage.js';
 import { useAuth } from './context/AuthContext.js';
 import { FoodEntry, NutrientTotals } from './types/nutrition.js';
 import { fetchDailyLog, saveDailyLogToDb } from './services/api.js';
@@ -13,6 +14,11 @@ import { formatDateKey } from './utils/storage.js';
 
 export function App() {
   const { user } = useAuth();
+
+  // If not logged in, render the dedicated Login / Sign-up page
+  if (!user) {
+    return <LoginPage />;
+  }
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const [entries, setEntries] = useState<FoodEntry[]>([]);
   const [totals, setTotals] = useState<NutrientTotals>({

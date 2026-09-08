@@ -1,10 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { UserSession, DailyGoals } from '../types/nutrition.js';
-import { loginUser, updateUserGoals, saveUserGeminiKey } from '../services/api.js';
+import { loginUser, registerUser, updateUserGoals, saveUserGeminiKey } from '../services/api.js';
 
 interface AuthContextType {
   user: UserSession | null;
-  login: (email?: string, name?: string) => Promise<void>;
+  login: (email: string, password?: string) => Promise<void>;
+  register: (email: string, name: string, password?: string) => Promise<void>;
   logout: () => void;
   updateGoals: (goals: DailyGoals) => Promise<void>;
   updateGeminiKey: (key: string) => Promise<void>;
@@ -14,8 +15,8 @@ interface AuthContextType {
   setIsApiKeyModalOpen: (open: boolean) => void;
 }
 
-const AUTH_KEY = 'dailylog_user_session';
-const GEMINI_KEY = 'dailylog_gemini_key';
+const AUTH_KEY = 'nutrilog_user_session';
+const GEMINI_KEY = 'nutrilog_gemini_key';
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
@@ -23,31 +24,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<UserSession | null>(() => {
     try {
       const raw = localStorage.getItem(AUTH_KEY);
-      if (raw) return JSON.parse(raw);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed && parsed.id && parsed.email) {
+          return parsed;
+        }
+      }
     } catch (e) {
       console.error('Failed to load session:', e);
     }
-    // Default initial session so user is immediately ready to log
-    return {
-      id: 'user_default',
-      email: 'jayant@example.com',
-      name: 'Jayant',
-      dailyGoals: {
-        kcal: 2200,
-        protein: 150,
-        carbs: 220,
-        fat: 65,
-        fibre: 32,
-      },
-      hasGeminiKey: Boolean(localStorage.getItem(GEMINI_KEY)),
-      geminiApiKey: localStorage.getItem(GEMINI_KEY) || '',
-    };
+    // No hardcoded default user: returns null so unauthenticated visitors see the Login page
+    return null;
   });
 
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState(false);
 
-  // Sync session with localStorage permanently
+  // Sync session with localStorage permanently - stays logged in until explicit logout
   useEffect(() => {
     if (user) {
       localStorage.setItem(AUTH_KEY, JSON.stringify(user));
@@ -56,13 +49,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [user]);
 
-  const login = async (email?: string, name?: string) => {
-    const session = await loginUser(email, name);
+  const login = async (email: string, password?: string) => {
+    const session = await loginUser(email, password);
     const savedGeminiKey = localStorage.getItem(GEMINI_KEY) || '';
     setUser({
       ...session,
       geminiApiKey: savedGeminiKey,
-      hasGeminiKey: Boolean(savedGeminiKey),
+      hasGeminiKey: Boolean(savedGeminiKey || session.hasGeminiKey),
+    });
+    setIsAuthModalOpen(false);
+  };
+
+  const register = async (email: string, name: string, password?: string) => {
+    const session = await registerUser(email, name, password);
+    const savedGeminiKey = localStorage.getItem(GEMINI_KEY) || '';
+    setUser({
+      ...session,
+      geminiApiKey: savedGeminiKey,
+      hasGeminiKey: Boolean(savedGeminiKey || session.hasGeminiKey),
     });
     setIsAuthModalOpen(false);
   };
@@ -105,6 +109,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       value={{
         user,
         login,
+        register,
         logout,
         updateGoals,
         updateGeminiKey,

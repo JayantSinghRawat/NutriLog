@@ -2,34 +2,30 @@ import { FoodEntry, NutrientTotals, DailyGoals, UserSession, HistorySummaryItem 
 
 const API_BASE = '/api';
 
-export async function loginUser(email?: string, name?: string): Promise<UserSession> {
-  try {
-    const res = await fetch(`${API_BASE}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, name }),
-    });
-    const data = await res.json();
-    if (data.success) {
-      return data.user;
-    }
-  } catch (e) {
-    console.warn('[API] Backend login failed, using local session:', e);
+export async function loginUser(email: string, password?: string): Promise<UserSession> {
+  const res = await fetch(`${API_BASE}/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+  });
+  const data = await res.json();
+  if (!res.ok || !data.success) {
+    throw new Error(data.message || 'Login failed. Please check your credentials.');
   }
+  return data.user;
+}
 
-  // Fallback to local default session
-  return {
-    id: 'user_local_' + (email ? email.replace(/[^a-zA-Z0-9]/g, '') : 'default'),
-    email: email || 'jayant@example.com',
-    name: name || 'Jayant',
-    dailyGoals: {
-      kcal: 2200,
-      protein: 150,
-      carbs: 220,
-      fat: 65,
-      fibre: 32,
-    },
-  };
+export async function registerUser(email: string, name: string, password?: string): Promise<UserSession> {
+  const res = await fetch(`${API_BASE}/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, name, password }),
+  });
+  const data = await res.json();
+  if (!res.ok || !data.success) {
+    throw new Error(data.message || 'Account registration failed.');
+  }
+  return data.user;
 }
 
 export async function updateUserGoals(userId: string, dailyGoals: DailyGoals): Promise<void> {
