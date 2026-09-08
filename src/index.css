@@ -744,315 +744,120 @@ input {
   border: 1px solid var(--border-subtle);
 }
 
-/* View Toggle Buttons [Cards | Table] */
-.view-toggle-group {
-  display: flex;
-  align-items: center;
-  background: var(--surface-input);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 2px;
-}
-
-.view-toggle-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.35rem 0.65rem;
-  border-radius: var(--radius-sm);
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--text-muted);
-  transition: all var(--transition-fast);
-}
-
-.view-toggle-btn.active {
-  background: var(--surface-card);
-  color: var(--text-primary);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-}
-
-/* MOBILE CARDS LAYOUT */
-.mobile-cards-list {
-  padding: 0.85rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.mobile-food-card {
-  background: var(--surface-card-solid);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 0.85rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-}
-
-.mobile-card-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-}
-
-.mobile-card-index {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--text-muted);
-}
-
-.mobile-card-name-input {
-  font-weight: 700;
-  font-size: 1rem;
-  color: var(--text-primary);
-  background: transparent;
+/* SCREEN-FITTED RESPONSIVE FOOD TABLE (Fits all elements on screen) */
+.table-container-screen {
   width: 100%;
-  border-bottom: 1px dashed transparent;
-  padding: 2px 0;
+  overflow: hidden;
 }
 
-.mobile-card-name-input:focus {
-  border-bottom-color: var(--border-focus);
-}
-
-.gemini-badge {
-  font-size: 0.65rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  padding: 2px 5px;
-  border-radius: 4px;
-  border: 1px solid var(--border-medium);
-  background: var(--surface-input);
-  color: var(--text-primary);
-  flex-shrink: 0;
-}
-
-.mobile-card-weight-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: var(--surface-input);
-  padding: 0.45rem 0.75rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border-subtle);
-}
-
-.mobile-field-label {
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-muted);
-}
-
-.mobile-weight-input-box {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.mobile-weight-input {
-  width: 65px;
-  text-align: right;
-  font-family: var(--font-mono);
-  font-weight: 800;
-  font-size: 0.95rem;
-  color: var(--text-primary);
-  background: transparent;
-}
-
-.mobile-unit-tag {
-  font-weight: 700;
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-}
-
-/* 5 Macro Pills Grid */
-.mobile-macros-grid {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 0.35rem;
-  background: var(--surface-input);
-  padding: 0.5rem;
-  border-radius: var(--radius-sm);
-}
-
-.mobile-macro-cell {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.2rem;
-  text-align: center;
-}
-
-.mobile-macro-label {
-  font-size: 0.65rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  white-space: nowrap;
-}
-
-.mobile-macro-input {
+.fitted-nutrient-table {
   width: 100%;
-  text-align: center;
-  font-family: var(--font-mono);
-  font-weight: 700;
-  font-size: 0.85rem;
-  background: transparent;
-  color: var(--text-primary);
-}
-
-/* Mobile Totals Footer Card */
-.mobile-totals-card {
-  background: var(--surface-input);
-  border: 2px solid var(--border-medium);
-  border-radius: var(--radius-md);
-  padding: 0.85rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  margin-top: 0.35rem;
-}
-
-.mobile-totals-title {
-  font-size: 0.85rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-primary);
-}
-
-.mobile-totals-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.5rem;
-}
-
-.mobile-total-item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-}
-
-.mobile-total-label {
-  font-size: 0.68rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
-
-.mobile-total-value {
-  font-family: var(--font-mono);
-  font-weight: 800;
-  font-size: 0.95rem;
-  color: var(--text-primary);
-}
-
-/* TRADITIONAL SPREADSHEET TABLE VIEW */
-.table-scroll-wrapper {
-  width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-.nutrient-table {
-  width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
   text-align: left;
-  min-width: 640px;
 }
 
-.nutrient-table th {
-  padding: 0.8rem 0.9rem;
-  font-size: 0.76rem;
-  font-weight: 700;
+/* Fixed column width percentages so all 8 columns fit on any screen */
+.th-food, .td-food {
+  width: 25%;
+  padding: 0.4rem 0.2rem 0.4rem 0.45rem;
+}
+
+.th-num, .td-num {
+  padding: 0.4rem 0.08rem;
+  text-align: right;
+}
+
+.th-num:nth-child(2), .td-num:nth-child(2) { width: 11%; } /* Wt */
+.th-num:nth-child(3), .td-num:nth-child(3) { width: 12%; } /* Kcal */
+.th-num:nth-child(4), .td-num:nth-child(4) { width: 12%; } /* Carb */
+.th-num:nth-child(5), .td-num:nth-child(5) { width: 11%; } /* Fat */
+.th-num:nth-child(6), .td-num:nth-child(6) { width: 11%; } /* Fib */
+.th-num:nth-child(7), .td-num:nth-child(7) { width: 12%; } /* Prot */
+
+.th-act, .td-act {
+  width: 6%;
+  padding: 0.4rem 0.15rem 0.4rem 0;
+  text-align: center;
+}
+
+.fitted-nutrient-table th {
+  font-size: 0.68rem;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.03em;
   color: var(--text-muted);
-  background: var(--surface-card);
+  background: var(--surface-input);
   border-bottom: 1px solid var(--border-subtle);
   white-space: nowrap;
 }
 
-.nutrient-table th.num-col,
-.nutrient-table td.num-col {
-  text-align: right;
-}
-
-.nutrient-table tbody tr {
-  border-bottom: 1px solid var(--table-border);
+.fitted-nutrient-table tbody tr {
+  border-bottom: 1px solid var(--border-subtle);
   transition: background-color var(--transition-fast);
 }
 
-.nutrient-table tbody tr:hover {
+.fitted-nutrient-table tbody tr:active,
+.fitted-nutrient-table tbody tr:hover {
   background-color: var(--table-row-hover);
 }
 
-.nutrient-table td {
-  padding: 0.75rem 0.9rem;
-  font-size: 0.9rem;
-  color: var(--text-primary);
-  vertical-align: middle;
-}
-
-.editable-input {
+.fitted-name-input {
+  width: 100%;
   background: transparent;
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
-  padding: 0.35rem 0.45rem;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 600;
   color: var(--text-primary);
+  padding: 2px 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   transition: all var(--transition-fast);
 }
 
-.editable-input:hover {
-  border-color: var(--border-subtle);
+.fitted-name-input:focus {
+  border-color: var(--border-focus);
+  background: var(--surface-input);
+  white-space: normal;
+}
+
+.fitted-num-input {
+  width: 100%;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: right;
+  padding: 2px 0;
+  -moz-appearance: textfield;
+  transition: all var(--transition-fast);
+}
+
+.fitted-num-input::-webkit-outer-spin-button,
+.fitted-num-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.fitted-num-input:focus {
+  border-color: var(--border-focus);
   background: var(--surface-input);
 }
 
-.editable-input:focus {
-  border-color: var(--border-focus);
-  background: var(--surface-card-solid);
-  outline: none;
-}
-
-.editable-input.num-input {
-  font-family: var(--font-mono);
-  font-weight: 600;
-  text-align: right;
-  width: 68px;
-}
-
-.editable-input.weight-input {
-  font-family: var(--font-mono);
-  font-weight: 700;
-  text-align: right;
-  width: 74px;
-}
-
-.editable-input.name-input {
-  font-weight: 600;
-  width: 100%;
-  min-width: 140px;
-}
-
-/* Row Action Buttons */
-.row-actions {
+.fitted-row-actions {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 0.35rem;
+  justify-content: center;
 }
 
-.action-icon-btn {
-  width: 32px;
-  height: 32px;
+.fitted-icon-btn {
+  width: 22px;
+  height: 22px;
   border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
@@ -1061,35 +866,58 @@ input {
   transition: all var(--transition-fast);
 }
 
-.action-icon-btn:active,
-.action-icon-btn:hover {
-  background: var(--surface-input);
+.fitted-icon-btn:active,
+.fitted-icon-btn:hover {
   color: var(--text-primary);
+  background: var(--surface-input);
 }
 
-/* Table Totals Row */
-.table-totals-row {
-  background: var(--table-footer-bg);
-  border-top: 2px solid var(--border-subtle);
-  font-weight: 800;
+/* TOTALS ROW AT END OF TABLE */
+.fitted-totals-row {
+  background: var(--surface-input);
+  border-top: 2px solid var(--border-medium);
 }
 
-.table-totals-row td {
-  padding: 0.9rem 0.9rem;
-  font-size: 0.92rem;
+.fitted-totals-row td {
+  padding: 0.45rem 0.12rem;
 }
 
-.total-label {
+.fitted-totals-row .total-label {
+  font-size: 0.72rem;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
   color: var(--text-primary);
+  padding-left: 0.5rem;
 }
 
-.total-val {
+.fitted-totals-row .total-val {
   font-family: var(--font-mono);
   font-weight: 800;
+  font-size: 0.8rem;
   color: var(--text-primary);
+  text-align: right;
+}
+
+@media (min-width: 768px) {
+  .th-food, .td-food {
+    padding: 0.65rem 0.5rem 0.65rem 0.85rem;
+  }
+  .th-num, .td-num {
+    padding: 0.65rem 0.35rem;
+  }
+  .fitted-nutrient-table th {
+    font-size: 0.75rem;
+  }
+  .fitted-name-input {
+    font-size: 0.9rem;
+  }
+  .fitted-num-input {
+    font-size: 0.88rem;
+  }
+  .fitted-totals-row .total-val {
+    font-size: 0.9rem;
+  }
 }
 
 /* Empty Table State */
