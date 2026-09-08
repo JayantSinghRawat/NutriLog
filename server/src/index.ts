@@ -27,7 +27,7 @@ app.get('/api/health', (req, res) => {
   res.json({
     status: 'ok',
     timestamp: new Date().toISOString(),
-    service: 'DailyLog API',
+    service: 'NutriLog API',
     hasGeminiKey: Boolean(activeKey),
     keyMasked: activeKey ? `${activeKey.slice(0, 6)}...${activeKey.slice(-4)}` : null,
   });
@@ -38,8 +38,8 @@ async function startServer() {
   await connectDB();
 
   app.listen(PORT, () => {
-    console.log(`[DailyLog Server] Running at http://localhost:${PORT}`);
-    console.log(`[DailyLog Server] API Health: http://localhost:${PORT}/api/health`);
+    console.log(`[NutriLog Server] Running at http://localhost:${PORT}`);
+    console.log(`[NutriLog Server] API Health: http://localhost:${PORT}/api/health`);
   });
 }
 

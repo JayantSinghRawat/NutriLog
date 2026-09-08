@@ -24,7 +24,7 @@ export function AuthModal() {
         <div className="modal-header">
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <User size={20} />
-            <h3 className="modal-title">Sign In to DailyLog</h3>
+            <h3 className="modal-title">Sign In to NutriLog</h3>
           </div>
           <button className="modal-close-btn" onClick={() => setIsAuthModalOpen(false)}>
             <X size={18} />

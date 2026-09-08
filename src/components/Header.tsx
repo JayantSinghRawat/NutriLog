@@ -63,7 +63,7 @@ export function Header({
             <Activity size={18} strokeWidth={2.5} />
           </div>
           <div className="brand-title">
-            DailyLog
+            NutriLog
             <span className="brand-tag">Tracker</span>
           </div>
         </div>
