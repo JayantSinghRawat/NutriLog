@@ -63,10 +63,20 @@ export function App() {
     [user?.id, dateKey]
   );
 
-  const handleAddEntries = (newEntries: FoodEntry[]) => {
-    const next = [...entries, ...newEntries];
-    persistEntries(next);
-  };
+  const handleAddEntries = useCallback(
+    (newEntries: FoodEntry[]) => {
+      setEntries((prev) => {
+        const next = [...prev, ...newEntries];
+        if (user?.id) {
+          saveDailyLogToDb(user.id, dateKey, next).then((updatedTotals) => {
+            setTotals(updatedTotals);
+          });
+        }
+        return next;
+      });
+    },
+    [user?.id, dateKey]
+  );
 
   const handleUpdateEntry = (updated: FoodEntry) => {
     const next = entries.map((item) => (item.id === updated.id ? updated : item));
