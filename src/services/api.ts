@@ -1,6 +1,8 @@
 import { FoodEntry, NutrientTotals, DailyGoals, UserSession, HistorySummaryItem } from '../types/nutrition.js';
 
-const API_BASE = '/api';
+const API_BASE = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL.replace(/\/$/, '')}/api`
+  : '/api';
 
 export async function loginUser(email: string, password?: string): Promise<UserSession> {
   const res = await fetch(`${API_BASE}/auth/login`, {
