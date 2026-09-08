@@ -152,7 +152,7 @@ export async function parseFoodQueryApi(
   query: string,
   userId?: string,
   geminiApiKey?: string
-): Promise<FoodEntry> {
+): Promise<FoodEntry[]> {
   const res = await fetch(`${API_BASE}/nutrition/parse`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -160,21 +160,29 @@ export async function parseFoodQueryApi(
   });
   
   const data = await res.json();
-  if (!res.ok || !data.success || !data.result) {
+  if (!res.ok || !data.success) {
     throw new Error(data.message || 'Failed to parse nutrition with Gemini API');
   }
 
-  return {
-    id: 'entry_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
-    name: data.result.name,
-    weight: data.result.weight,
-    kcal: data.result.kcal,
-    carbs: data.result.carbs,
-    fat: data.result.fat,
-    fibre: data.result.fibre,
-    protein: data.result.protein,
-    per100g: data.result.per100g,
-    rawQuery: data.result.rawQuery,
+  const rawList: any[] = Array.isArray(data.results)
+    ? data.results
+    : (Array.isArray(data.result) ? data.result : (data.result ? [data.result] : []));
+
+  if (rawList.length === 0) {
+    throw new Error('No nutrient data returned from Gemini API');
+  }
+
+  return rawList.map((item: any, idx: number) => ({
+    id: 'entry_' + Date.now() + '_' + idx + '_' + Math.random().toString(36).substr(2, 5),
+    name: item.name,
+    weight: item.weight,
+    kcal: item.kcal,
+    carbs: item.carbs,
+    fat: item.fat,
+    fibre: item.fibre,
+    protein: item.protein,
+    per100g: item.per100g,
+    rawQuery: item.rawQuery || query,
     source: 'gemini',
-  };
+  }));
 }

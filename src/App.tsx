@@ -63,8 +63,8 @@ export function App() {
     [user?.id, dateKey]
   );
 
-  const handleAddEntry = (entry: FoodEntry) => {
-    const next = [...entries, entry];
+  const handleAddEntries = (newEntries: FoodEntry[]) => {
+    const next = [...entries, ...newEntries];
     persistEntries(next);
   };
 
@@ -103,7 +103,7 @@ export function App() {
       />
 
       {/* Smart Natural Language Quick Add Bar (Gemini AI Powered) */}
-      <QuickAddBar onAddEntry={handleAddEntry} />
+      <QuickAddBar onAddEntries={handleAddEntries} />
 
       {/* Real-time Interactive Nutrient Table with Totals row at end */}
       <FoodTable

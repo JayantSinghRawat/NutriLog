@@ -20,11 +20,12 @@ nutritionRouter.post('/parse', async (req: Request, res: Response) => {
       }
     }
 
-    const result = await parseWithGemini(query, activeKey);
+    const results = await parseWithGemini(query, activeKey);
 
     res.json({
       success: true,
-      result,
+      results,
+      result: results[0],
     });
   } catch (error: any) {
     console.error('[Nutrition Route] Error:', error.message);

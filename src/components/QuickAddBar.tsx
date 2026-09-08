@@ -5,10 +5,10 @@ import { parseFoodQueryApi } from '../services/api.js';
 import { useAuth } from '../context/AuthContext.js';
 
 interface QuickAddBarProps {
-  onAddEntry: (entry: FoodEntry) => void;
+  onAddEntries: (entries: FoodEntry[]) => void;
 }
 
-export function QuickAddBar({ onAddEntry }: QuickAddBarProps) {
+export function QuickAddBar({ onAddEntries }: QuickAddBarProps) {
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -23,9 +23,9 @@ export function QuickAddBar({ onAddEntry }: QuickAddBarProps) {
     setErrorMessage(null);
     try {
       // Direct call to Gemini AI backend
-      const result = await parseFoodQueryApi(clean, user?.id, user?.geminiApiKey);
-      if (result) {
-        onAddEntry(result);
+      const results = await parseFoodQueryApi(clean, user?.id, user?.geminiApiKey);
+      if (results && results.length > 0) {
+        onAddEntries(results);
         setQuery('');
       }
     } catch (err: any) {
