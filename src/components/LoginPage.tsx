@@ -9,7 +9,6 @@ import {
   Sun,
   Moon,
   ArrowRight,
-  Sparkles,
   AlertCircle,
   Loader2,
 } from 'lucide-react';
@@ -58,20 +57,6 @@ export function LoginPage() {
       }
     } catch (err: any) {
       setError(err.message || 'Authentication failed. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleDemoLogin = async () => {
-    setError(null);
-    setEmail('jayant@example.com');
-    setPassword('password123');
-    setIsLoading(true);
-    try {
-      await login('jayant@example.com', 'password123');
-    } catch (err: any) {
-      setError(err.message || 'Demo login failed.');
     } finally {
       setIsLoading(false);
     }
@@ -216,40 +201,6 @@ export function LoginPage() {
             )}
           </button>
         </form>
-
-        {/* Demo Account shortcut */}
-        {mode === 'login' && (
-          <div className="login-demo-section">
-            <div className="login-divider">
-              <span>or quick start</span>
-            </div>
-            <button
-              type="button"
-              className="login-demo-btn"
-              onClick={handleDemoLogin}
-              disabled={isLoading}
-            >
-              <Sparkles size={15} />
-              <span>Sign In as Demo User (Jayant)</span>
-            </button>
-          </div>
-        )}
-
-        {/* Feature Highlights */}
-        <div className="login-features-list">
-          <div className="login-feature-item">
-            <span className="login-feature-dot">✦</span>
-            <span>Natural language food logging powered by Gemini AI</span>
-          </div>
-          <div className="login-feature-item">
-            <span className="login-feature-dot">✦</span>
-            <span>Real-time dynamic calorie, protein, carb & fat tracking</span>
-          </div>
-          <div className="login-feature-item">
-            <span className="login-feature-dot">✦</span>
-            <span>Stays logged in securely until you click Log Out</span>
-          </div>
-        </div>
       </div>
     </div>
   );
