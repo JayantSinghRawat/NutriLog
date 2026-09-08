@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#141a29" />
+      <stop offset="100%" stop-color="#070a10" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Full solid background for iOS home screen squircle -->
+  <rect width="512" height="512" fill="url(#bgGrad)" />
+  
+  <!-- Subtle inner border framing the icon -->
+  <rect x="24" y="24" width="464" height="464" rx="100" fill="none" stroke="rgba(255, 255, 255, 0.1)" stroke-width="4" />
+
+  <!-- Centered Lifeline Pulse Icon -->
+  <g transform="translate(64, 64) scale(16)">
+    <path
+      d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"
+      fill="none"
+      stroke="#ffffff"
+      stroke-width="2.4"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </g>
+</svg>
